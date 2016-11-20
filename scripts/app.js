@@ -66,8 +66,10 @@ ajaxRequest.onload = function() {
       soundSource = audioCtx.createBufferSource();
       soundSource.buffer = concertHallBuffer;
       console.log(soundSource);
-      soundSource.connect(audioCtx.destination);
-      soundSource.loop = true;
+      distortion.curve = makeDistortionCurve(400);
+      soundSource.connect(distortion);
+      distortion.connect(audioCtx.destination);
+      soundSource.loop = false;
       soundSource.start();
     }, function(e){"Error with decoding audio data" + e.err});
 }
@@ -99,13 +101,13 @@ if (navigator.getUserMedia) {
 
       // Success callback
       function(stream) {
-         source = audioCtx.createMediaStreamSource(stream);
-         source.connect(analyser);
-         analyser.connect(distortion);
-         distortion.connect(biquadFilter);
-         biquadFilter.connect(convolver);
-         convolver.connect(gainNode);
-         gainNode.connect(audioCtx.destination);
+        //  source = audioCtx.createMediaStreamSource(stream);
+        //  source.connect(analyser);
+        //  analyser.connect(distortion);
+        //  distortion.connect(biquadFilter);
+        //  biquadFilter.connect(convolver);
+        //  convolver.connect(gainNode);
+        //  gainNode.connect(audioCtx.destination);
 
       	 visualize();
          voiceChange();

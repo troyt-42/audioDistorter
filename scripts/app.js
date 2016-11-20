@@ -53,23 +53,23 @@ var soundSource, concertHallBuffer;
 
 ajaxRequest = new XMLHttpRequest();
 
-ajaxRequest.open('GET', 'https://mdn.github.io/voice-change-o-matic/audio/concert-crowd.ogg', true);
+ajaxRequest.open('GET', 'https://raw.githubusercontent.com/watrool/audioDistorter/master/audio/rp-1.wav', true);
 
 ajaxRequest.responseType = 'arraybuffer';
 
 
 ajaxRequest.onload = function() {
   var audioData = ajaxRequest.response;
-
+  console.log(audioData);
   audioCtx.decodeAudioData(audioData, function(buffer) {
       concertHallBuffer = buffer;
       soundSource = audioCtx.createBufferSource();
       soundSource.buffer = concertHallBuffer;
+      console.log(soundSource);
+      soundSource.connect(audioCtx.destination);
+      soundSource.loop = true;
+      soundSource.start();
     }, function(e){"Error with decoding audio data" + e.err});
-
-  //soundSource.connect(audioCtx.destination);
-  //soundSource.loop = true;
-  //soundSource.start();
 }
 
 ajaxRequest.send();

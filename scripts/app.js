@@ -35,7 +35,7 @@ var convolver = audioCtx.createConvolver();
 
 function makeDistortionCurve(amount) {
   var k = typeof amount === 'number' ? amount : 50,
-    n_samples = 44100,
+    n_samples = 44100 * 0.5,
     curve = new Float32Array(n_samples),
     deg = Math.PI / 180,
     i = 0,
@@ -66,9 +66,20 @@ ajaxRequest.onload = function() {
       soundSource = audioCtx.createBufferSource();
       soundSource.buffer = concertHallBuffer;
       console.log(soundSource);
-      distortion.curve = makeDistortionCurve(400);
-      soundSource.connect(distortion);
-      distortion.connect(audioCtx.destination);
+      distortion.curve = makeDistortionCurve(50);
+      biquadFilter.type = "highpass";
+      biquadFilter.frequency.value = 500;
+      biquadFilter.gain.value = 20;
+      biquadFilter.Q.value = 5;
+      // convolver.buffer = concertHallBuffer;
+
+      soundSource.connect(analyser);
+      analyser.connect(distortion);
+      distortion.connect(biquadFilter);
+      biquadFilter.connect(gainNode);
+      // convolver.connect(audioCtx.destination);
+      gainNode.connect(audioCtx.destination);
+
       soundSource.loop = false;
       soundSource.start();
     }, function(e){"Error with decoding audio data" + e.err});
